@@ -90,3 +90,54 @@ CREATE TABLE users (
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        FOREIGN KEY (teaching_group_id) REFERENCES teaching_groups(id) ON DELETE CASCADE
 );
+
+-- Таблица подписок
+CREATE TABLE enrollments (
+                             id SERIAL PRIMARY KEY,
+                             user_id INT NOT NULL,
+                             program_id INT NOT NULL,
+                             status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'pending', 'cancelled', 'completed')), -- Статус подписки
+                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                             FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
+
+-- Таблица оплат
+CREATE TABLE payments (
+                          id SERIAL PRIMARY KEY,
+                          enrollment_id INT NOT NULL,
+                          amount DECIMAL(10, 2) NOT NULL,
+                          status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'paid', 'failed', 'refunded')), -- Статус оплаты
+                          payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          FOREIGN KEY (enrollment_id) REFERENCES enrollments(id) ON DELETE CASCADE
+);
+
+-- Таблица прогресса по программам
+CREATE TABLE program_completions (
+                                     id SERIAL PRIMARY KEY,
+                                     user_id INT NOT NULL,
+                                     program_id INT NOT NULL,
+                                     status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'completed', 'pending', 'cancelled')), -- Статус прохождения программы
+                                     start_date TIMESTAMP,
+                                     end_date TIMESTAMP,
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                     FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
+
+-- Таблица сертификатов
+CREATE TABLE certificates (
+                              id SERIAL PRIMARY KEY,
+                              user_id INT NOT NULL,
+                              program_id INT NOT NULL,
+                              certificate_url VARCHAR(255) NOT NULL,
+                              issued_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                              FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
