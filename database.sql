@@ -141,3 +141,25 @@ CREATE TABLE certificates (
                               FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                               FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
 );
+
+-- Таблица тестов
+CREATE TABLE quizzes (
+                         id SERIAL PRIMARY KEY,
+                         lesson_id INT NOT NULL,
+                         title VARCHAR(255) NOT NULL,
+                         content TEXT NOT NULL,
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
+);
+
+-- Таблица практических заданий
+CREATE TABLE exercises (
+                           id SERIAL PRIMARY KEY,
+                           lesson_id INT NOT NULL,
+                           title VARCHAR(255) NOT NULL,
+                           url VARCHAR(255) NOT NULL,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
+);
