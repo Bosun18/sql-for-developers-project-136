@@ -1,5 +1,3 @@
-CREATE DATABASE my_database;
-
 -- Таблица уроков
 CREATE TABLE lessons (
                          id SERIAL PRIMARY KEY,
