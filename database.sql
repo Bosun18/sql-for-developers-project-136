@@ -163,3 +163,26 @@ CREATE TABLE exercises (
                            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
 );
+
+-- Таблица обсуждений
+CREATE TABLE discussions (
+                             id SERIAL PRIMARY KEY,
+                             lesson_id INT NOT NULL,
+                             content TEXT NOT NULL,
+                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             parent_id INT REFERENCES discussions(id) ON DELETE CASCADE,
+                             FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
+);
+
+-- Таблица блога
+CREATE TABLE blog (
+                      id SERIAL PRIMARY KEY,
+                      student_id INT NOT NULL,
+                      title VARCHAR(255) NOT NULL,
+                      content TEXT NOT NULL,
+                      status VARCHAR(50) CHECK (status IN ('created', 'in moderation', 'published', 'archived')) NOT NULL,
+                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                      FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
