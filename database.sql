@@ -69,3 +69,24 @@ CREATE TABLE lesson_module (
                                FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE,
                                FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
 );
+
+-- Таблица учебных групп
+CREATE TABLE teaching_groups (
+                                 id SERIAL PRIMARY KEY,
+                                 slug VARCHAR(100) NOT NULL UNIQUE,
+                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица пользователей
+CREATE TABLE users (
+                       id SERIAL PRIMARY KEY,
+                       username VARCHAR(100) NOT NULL,
+                       email VARCHAR(100) NOT NULL UNIQUE,
+                       password_hash VARCHAR(255) NOT NULL,
+                       teaching_group_id INT NOT NULL,
+                       role VARCHAR(20) NOT NULL CHECK (role IN ('student', 'teacher', 'admin')), -- Роли пользователя
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       FOREIGN KEY (teaching_group_id) REFERENCES teaching_groups(id) ON DELETE CASCADE
+);
